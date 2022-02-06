@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -38,6 +41,15 @@ Future<bool> pay(int amount, String userID) async {
   } catch (e) {
     throw Exception("Something went wrong");
   }
+}
+
+class MyDialog extends StatefulWidget {
+  final String userID;
+
+  MyDialog(this.userID);
+
+  @override
+  _MyDialogState createState() => _MyDialogState();
 }
 
 class _MyDialogState extends State<MyDialog> {
@@ -113,10 +125,62 @@ class _MyDialogState extends State<MyDialog> {
                         }
                       } catch (e) {}
                     },
-                   
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(35),
+                    ),
+                    color: Color(0xFF000000),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Let's Go!",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : CircularProgressIndicator()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MainApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              height: double.maxFinite,
+              child: Image.asset(
+                "assets/images/landing.gif",
+                fit: BoxFit.cover,
+              ),
+            ),
+            Opacity(
+              opacity: 0.3,
+              child: Container(
+                color: Colors.black,
+              ),
+            ),
             Column(
               children: [
-             
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: Container(
+                      child: SvgPicture.asset("assets/images/logo.svg"),
+                    ),
+                  ),
+                ),
                 Expanded(
                   flex: 1,
                   child: Container(
@@ -176,7 +240,13 @@ class _MyDialogState extends State<MyDialog> {
                               SizedBox(
                                 width: 8,
                               ),
-                              
+                              Text(
+                                "Tap to Pay",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
